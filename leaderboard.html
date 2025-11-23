@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URCM - Live Leaderboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .last-update {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9em;
+            margin-bottom: 30px;
+        }
+
+        .leaderboard-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .leaderboard {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .leaderboard-header {
+            display: grid;
+            grid-template-columns: 60px 1fr 120px 100px;
+            gap: 15px;
+            padding: 15px 20px;
+            background: rgba(0,0,0,0.05);
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .runner-row {
+            display: grid;
+            grid-template-columns: 60px 1fr 120px 100px;
+            gap: 15px;
+            padding: 18px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+            align-items: center;
+        }
+
+        .runner-row:last-child {
+            border-bottom: none;
+        }
+
+        .runner-row:hover {
+            background: #f8f9fa;
+        }
+
+        .rank {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #667eea;
+            text-align: center;
+        }
+
+        .rank.first { color: #FFD700; }
+        .rank.second { color: #C0C0C0; }
+        .rank.third { color: #CD7F32; }
+
+        .name {
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .laps {
+            font-size: 1em;
+            color: #4a5568;
+            text-align: right;
+        }
+
+        .distance {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #667eea;
+            text-align: right;
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .section-title {
+                font-size: 1.4em;
+                padding: 12px 15px;
+            }
+
+            .leaderboard-header {
+                grid-template-columns: 50px 1fr 90px 80px;
+                gap: 10px;
+                padding: 12px 15px;
+                font-size: 0.75em;
+            }
+
+            .runner-row {
+                grid-template-columns: 50px 1fr 90px 80px;
+                gap: 10px;
+                padding: 15px;
+            }
+
+            .rank {
+                font-size: 1.1em;
+            }
+
+            .name {
+                font-size: 0.95em;
+            }
+
+            .laps {
+                font-size: 0.85em;
+            }
+
+            .distance {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .section-title {
+                font-size: 1.2em;
+            }
+
+            .leaderboard-header {
+                grid-template-columns: 40px 1fr 70px 65px;
+                gap: 8px;
+                padding: 10px 12px;
+                font-size: 0.7em;
+            }
+
+            .runner-row {
+                grid-template-columns: 40px 1fr 70px 65px;
+                gap: 8px;
+                padding: 12px;
+            }
+
+            .rank {
+                font-size: 1em;
+            }
+
+            .name {
+                font-size: 0.9em;
+            }
+
+            .laps {
+                font-size: 0.8em;
+            }
+
+            .distance {
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>URCM Live Leaderboard</h1>
+        <div class="last-update" id="lastUpdate">Loading...</div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            Connecting to live data...
+        </div>
+
+        <div id="leaderboards" style="display: none;">
+            <!-- 100 Mile Teams -->
+            <div class="leaderboard-section">
+                <div class="section-title">100 Mile Teams (160km)</div>
+                <div class="leaderboard">
+                    <div class="leaderboard-header">
+                        <div>Rank</div>
+                        <div>Team</div>
+                        <div>Laps</div>
+                        <div>Distance</div>
+                    </div>
+                    <div id="teams-list"></div>
+                </div>
+            </div>
+
+            <!-- 100km Solo -->
+            <div class="leaderboard-section">
+                <div class="section-title">100km Solo</div>
+                <div class="leaderboard">
+                    <div class="leaderboard-header">
+                        <div>Rank</div>
+                        <div>Runner</div>
+                        <div>Laps</div>
+                        <div>Distance</div>
+                    </div>
+                    <div id="solo-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFG3oclIU45jyfzh9uIe2k-Um-iNWv2_c",
+            authDomain: "urcm-race.firebaseapp.com",
+            databaseURL: "https://urcm-race-default-rtdb.firebaseio.com",
+            projectId: "urcm-race",
+            storageBucket: "urcm-race.firebasestorage.app",
+            messagingSenderId: "806959334832",
+            appId: "1:806959334832:web:a7a54b70400ba2e8028275"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Listen for data changes
+        database.ref('/').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                renderLeaderboards(data);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('leaderboards').style.display = 'block';
+                updateLastUpdate();
+            }
+        });
+
+        function renderLeaderboards(data) {
+            renderTeams(data.teams || {});
+            renderSolo(data.solo || {});
+        }
+
+        function renderTeams(teams) {
+            const teamsList = document.getElementById('teams-list');
+            const teamsArray = Object.entries(teams).map(([id, team]) => ({
+                id,
+                ...team,
+                distance: team.laps * 5
+            }));
+
+            // Sort by distance (most laps first)
+            teamsArray.sort((a, b) => b.distance - a.distance);
+
+            teamsList.innerHTML = teamsArray.map((team, index) => {
+                const rank = index + 1;
+                const rankClass = rank === 1 ? 'first' : rank === 2 ? 'second' : rank === 3 ? 'third' : '';
+
+                return `
+                    <div class="runner-row">
+                        <div class="rank ${rankClass}">${rank}</div>
+                        <div class="name">${team.name}</div>
+                        <div class="laps">${team.laps} laps</div>
+                        <div class="distance">${team.distance}km</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderSolo(solo) {
+            const soloList = document.getElementById('solo-list');
+            const soloArray = Object.entries(solo).map(([id, runner]) => ({
+                id,
+                ...runner,
+                distance: runner.laps * 5
+            }));
+
+            // Sort by distance (most laps first)
+            soloArray.sort((a, b) => b.distance - a.distance);
+
+            soloList.innerHTML = soloArray.map((runner, index) => {
+                const rank = index + 1;
+                const rankClass = rank === 1 ? 'first' : rank === 2 ? 'second' : rank === 3 ? 'third' : '';
+
+                return `
+                    <div class="runner-row">
+                        <div class="rank ${rankClass}">${rank}</div>
+                        <div class="name">${runner.name}</div>
+                        <div class="laps">${runner.laps} laps</div>
+                        <div class="distance">${runner.distance}km</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateLastUpdate() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+            document.getElementById('lastUpdate').textContent = `Last updated: ${timeString}`;
+        }
+
+        // Update timestamp every second
+        setInterval(updateLastUpdate, 1000);
+    </script>
+</body>
+</html>

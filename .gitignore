@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Video files (too large for git)
+*.mov
+*.mp4
+
+# Temporary files
+*.tmp

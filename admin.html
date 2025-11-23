@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URCM - Admin Lap Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Login Screen */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .login-container h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .login-container button:hover {
+            background: #5568d3;
+        }
+
+        .error-message {
+            color: #e53e3e;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Admin Panel */
+        #admin-panel {
+            display: none;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .status {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9em;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .init-btn {
+            padding: 10px 20px;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .init-btn:hover {
+            background: #38a169;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .runner-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 15px;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .runner-item:last-child {
+            border-bottom: none;
+        }
+
+        .runner-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .runner-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .runner-stats {
+            font-size: 0.9em;
+            color: #718096;
+        }
+
+        .lap-count {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #667eea;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .lap-btn {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .lap-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .lap-btn:active {
+            transform: translateY(0);
+        }
+
+        .undo-btn {
+            padding: 8px 16px;
+            background: #fc8181;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-left: 10px;
+        }
+
+        .undo-btn:hover {
+            background: #f56565;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .runner-item {
+                grid-template-columns: 1fr auto;
+                gap: 10px;
+            }
+
+            .lap-controls {
+                grid-column: 1 / -1;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-top: 10px;
+            }
+
+            .lap-btn {
+                flex: 1;
+                margin-right: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .section {
+                padding: 15px;
+            }
+
+            .section h2 {
+                font-size: 1.2em;
+            }
+
+            .runner-name {
+                font-size: 1em;
+            }
+
+            .lap-count {
+                font-size: 1.3em;
+            }
+
+            .lap-btn {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="login-screen">
+        <h1>Admin Login</h1>
+        <input type="password" id="password-input" placeholder="Enter password" />
+        <button onclick="login()">Login</button>
+        <div class="error-message" id="error-message">Incorrect password</div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel">
+        <div class="container">
+            <h1>Lap Tracker Admin</h1>
+            <div class="header-controls">
+                <div class="status" id="status">Connected</div>
+                <div>
+                    <button class="init-btn" onclick="initializeData()">Initialize Race Data</button>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+            <!-- 100 Mile Teams Section -->
+            <div class="section">
+                <h2>100 Mile Teams (160km Target)</h2>
+                <div id="teams-list"></div>
+            </div>
+
+            <!-- 100km Solo Section -->
+            <div class="section">
+                <h2>100km Solo</h2>
+                <div id="solo-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        // CHANGE THIS PASSWORD
+        const ADMIN_PASSWORD = "urcm2024";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFG3oclIU45jyfzh9uIe2k-Um-iNWv2_c",
+            authDomain: "urcm-race.firebaseapp.com",
+            databaseURL: "https://urcm-race-default-rtdb.firebaseio.com",
+            projectId: "urcm-race",
+            storageBucket: "urcm-race.firebasestorage.app",
+            messagingSenderId: "806959334832",
+            appId: "1:806959334832:web:a7a54b70400ba2e8028275"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Check if already logged in
+        if (localStorage.getItem('adminLoggedIn') === 'true') {
+            showAdminPanel();
+        }
+
+        // Login functionality
+        function login() {
+            const password = document.getElementById('password-input').value;
+            if (password === ADMIN_PASSWORD) {
+                localStorage.setItem('adminLoggedIn', 'true');
+                showAdminPanel();
+            } else {
+                document.getElementById('error-message').style.display = 'block';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            location.reload();
+        }
+
+        function showAdminPanel() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            loadData();
+        }
+
+        // Allow Enter key to login
+        document.getElementById('password-input')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') login();
+        });
+
+        // Initialize race data
+        function initializeData() {
+            if (!confirm('This will reset all lap counts to 0. Continue?')) return;
+
+            const initialData = {
+                teams: {
+                    team1: { name: "Team Alpha", laps: 0 },
+                    team2: { name: "Team Bravo", laps: 0 },
+                    team3: { name: "Team Charlie", laps: 0 },
+                    team4: { name: "Team Delta", laps: 0 },
+                    team5: { name: "Team Echo", laps: 0 },
+                    team6: { name: "Team Foxtrot", laps: 0 },
+                    team7: { name: "Team Golf", laps: 0 },
+                    team8: { name: "Team Hotel", laps: 0 },
+                    team9: { name: "Team India", laps: 0 },
+                    team10: { name: "Team Juliet", laps: 0 },
+                    team11: { name: "Team Kilo", laps: 0 },
+                    team12: { name: "Team Lima", laps: 0 }
+                },
+                solo: {
+                    solo1: { name: "Runner One", laps: 0 },
+                    solo2: { name: "Runner Two", laps: 0 },
+                    solo3: { name: "Runner Three", laps: 0 },
+                    solo4: { name: "Runner Four", laps: 0 },
+                    solo5: { name: "Runner Five", laps: 0 },
+                    solo6: { name: "Runner Six", laps: 0 },
+                    solo7: { name: "Runner Seven", laps: 0 },
+                    solo8: { name: "Runner Eight", laps: 0 },
+                    solo9: { name: "Runner Nine", laps: 0 },
+                    solo10: { name: "Runner Ten", laps: 0 },
+                    solo11: { name: "Runner Eleven", laps: 0 },
+                    solo12: { name: "Runner Twelve", laps: 0 }
+                }
+            };
+
+            database.ref('/').set(initialData).then(() => {
+                alert('Race data initialized successfully!');
+            }).catch((error) => {
+                alert('Error initializing data: ' + error.message);
+            });
+        }
+
+        // Load and listen to data
+        function loadData() {
+            database.ref('/').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    renderTeams(data.teams || {});
+                    renderSolo(data.solo || {});
+                    document.getElementById('status').textContent = 'Connected - Live';
+                }
+            });
+        }
+
+        function renderTeams(teams) {
+            const teamsList = document.getElementById('teams-list');
+            const teamsArray = Object.entries(teams).map(([id, team]) => ({
+                id,
+                ...team
+            }));
+
+            teamsList.innerHTML = teamsArray.map(team => {
+                const distance = team.laps * 5;
+                return `
+                    <div class="runner-item">
+                        <div class="runner-info">
+                            <div class="runner-name">${team.name}</div>
+                            <div class="runner-stats">${distance}km completed</div>
+                        </div>
+                        <div class="lap-count">${team.laps}</div>
+                        <div class="lap-controls">
+                            <button class="lap-btn" onclick="addLap('teams', '${team.id}')">
+                                + LAP COMPLETE
+                            </button>
+                            ${team.laps > 0 ? `<button class="undo-btn" onclick="removeLap('teams', '${team.id}')">Undo</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderSolo(solo) {
+            const soloList = document.getElementById('solo-list');
+            const soloArray = Object.entries(solo).map(([id, runner]) => ({
+                id,
+                ...runner
+            }));
+
+            soloList.innerHTML = soloArray.map(runner => {
+                const distance = runner.laps * 5;
+                return `
+                    <div class="runner-item">
+                        <div class="runner-info">
+                            <div class="runner-name">${runner.name}</div>
+                            <div class="runner-stats">${distance}km completed</div>
+                        </div>
+                        <div class="lap-count">${runner.laps}</div>
+                        <div class="lap-controls">
+                            <button class="lap-btn" onclick="addLap('solo', '${runner.id}')">
+                                + LAP COMPLETE
+                            </button>
+                            ${runner.laps > 0 ? `<button class="undo-btn" onclick="removeLap('solo', '${runner.id}')">Undo</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Add a lap
+        function addLap(category, runnerId) {
+            const ref = database.ref(`${category}/${runnerId}/laps`);
+            ref.transaction((currentLaps) => {
+                return (currentLaps || 0) + 1;
+            });
+        }
+
+        // Remove a lap (undo)
+        function removeLap(category, runnerId) {
+            const ref = database.ref(`${category}/${runnerId}/laps`);
+            ref.transaction((currentLaps) => {
+                return Math.max(0, (currentLaps || 0) - 1);
+            });
+        }
+    </script>
+</body>
+</html>

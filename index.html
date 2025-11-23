@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URCM - Race Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        /* Main video */
+        .video-container video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            z-index: 0;
+        }
+
+
+        /* Sponsors Section */
+        .sponsors-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+            padding: 60px 80px 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 70px;
+        }
+
+        .sponsor-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 130px;
+            padding: 0 20px;
+        }
+
+        .sponsor-logo {
+            max-height: 130px;
+            width: auto;
+            max-width: 400px;
+            object-fit: contain;
+            filter: brightness(1.15) 
+                    drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
+                    drop-shadow(0 0 12px rgba(255, 255, 255, 0.4))
+                    drop-shadow(0 0 18px rgba(255, 255, 255, 0.3))
+                    drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
+            opacity: 0.95;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sponsor-logo:hover {
+            opacity: 1;
+            transform: translateY(-3px) scale(1.1);
+            filter: brightness(1.25) 
+                    drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))
+                    drop-shadow(0 0 16px rgba(255, 255, 255, 0.6))
+                    drop-shadow(0 0 24px rgba(255, 255, 255, 0.4))
+                    drop-shadow(0 5px 20px rgba(0, 0, 0, 0.9));
+        }
+
+        /* Individual logo sizing adjustments */
+        .sponsor-logo[alt="Maurten"] {
+            max-height: 120px;
+        }
+
+        .sponsor-logo[alt="Ciele Athletics"] {
+            max-height: 115px;
+        }
+
+        .sponsor-logo[alt="Fenix"] {
+            max-height: 130px;
+        }
+
+        .sponsor-logo[alt="Pabst Blue Ribbon"] {
+            max-height: 120px;
+        }
+
+        .sponsor-logo[alt="HOKA"] {
+            max-height: 110px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .sponsors-section {
+                padding: 50px 50px 60px;
+                gap: 55px;
+            }
+
+            .sponsor-item {
+                height: 110px;
+            }
+
+            .sponsor-logo {
+                max-height: 110px;
+                max-width: 320px;
+            }
+
+            .sponsor-logo[alt="Maurten"] {
+                max-height: 100px;
+            }
+
+            .sponsor-logo[alt="Ciele Athletics"] {
+                max-height: 95px;
+            }
+
+            .sponsor-logo[alt="Fenix"] {
+                max-height: 110px;
+            }
+
+            .sponsor-logo[alt="Pabst Blue Ribbon"] {
+                max-height: 100px;
+            }
+
+            .sponsor-logo[alt="HOKA"] {
+                max-height: 90px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sponsors-section {
+                padding: 45px 30px 55px;
+                gap: 45px;
+            }
+
+            .sponsor-item {
+                height: 95px;
+            }
+
+            .sponsor-logo {
+                max-height: 95px;
+                max-width: 260px;
+            }
+
+            .sponsor-logo[alt="Maurten"] {
+                max-height: 88px;
+            }
+
+            .sponsor-logo[alt="Ciele Athletics"] {
+                max-height: 82px;
+            }
+
+            .sponsor-logo[alt="Fenix"] {
+                max-height: 95px;
+            }
+
+            .sponsor-logo[alt="Pabst Blue Ribbon"] {
+                max-height: 88px;
+            }
+
+            .sponsor-logo[alt="HOKA"] {
+                max-height: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sponsors-section {
+                padding: 40px 20px 50px;
+                gap: 35px;
+            }
+
+            .sponsor-item {
+                height: 80px;
+            }
+
+            .sponsor-logo {
+                max-height: 80px;
+                max-width: 220px;
+            }
+
+            .sponsor-logo[alt="Maurten"] {
+                max-height: 75px;
+            }
+
+            .sponsor-logo[alt="Ciele Athletics"] {
+                max-height: 70px;
+            }
+
+            .sponsor-logo[alt="Fenix"] {
+                max-height: 80px;
+            }
+
+            .sponsor-logo[alt="Pabst Blue Ribbon"] {
+                max-height: 75px;
+            }
+
+            .sponsor-logo[alt="HOKA"] {
+                max-height: 68px;
+            }
+        }
+
+        /* Get Tickets Button */
+        .tickets-button-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .tickets-button {
+            display: inline-block;
+            padding: 18px 45px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.6),
+                        0 0 20px rgba(255, 255, 255, 0.4),
+                        0 0 30px rgba(255, 255, 255, 0.3),
+                        0 4px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .tickets-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8),
+                        0 0 25px rgba(255, 255, 255, 0.6),
+                        0 0 35px rgba(255, 255, 255, 0.4),
+                        0 6px 20px rgba(0, 0, 0, 0.6);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .tickets-button:active {
+            transform: translateY(0) scale(1.02);
+        }
+
+        /* Ensure video plays on mobile */
+        @media (max-width: 768px) {
+            .video-container video {
+                width: 100%;
+                height: 100%;
+            }
+
+            .tickets-button {
+                padding: 16px 35px;
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tickets-button {
+                padding: 14px 28px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video id="bgVideo" autoplay muted loop playsinline preload="auto" webkit-playsinline>
+            <source src="trippy.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Get Tickets Button -->
+    <div class="tickets-button-container">
+        <a href="https://simpli.events/e/NOC100" target="_blank" class="tickets-button">Get Tickets</a>
+    </div>
+
+    <!-- Sponsors Section -->
+    <div class="sponsors-section">
+        <div class="sponsor-item">
+            <img src="sponsors/maurten.png" alt="Maurten" class="sponsor-logo">
+        </div>
+        <div class="sponsor-item">
+            <img src="sponsors/ciele athletics.png" alt="Ciele Athletics" class="sponsor-logo">
+        </div>
+        <div class="sponsor-item">
+            <img src="sponsors/fenix.webp" alt="Fenix" class="sponsor-logo">
+        </div>
+        <div class="sponsor-item">
+            <img src="sponsors/Pabst Blue Ribbon.png" alt="Pabst Blue Ribbon" class="sponsor-logo">
+        </div>
+        <div class="sponsor-item">
+            <img src="sponsors/HOKA.png" alt="HOKA" class="sponsor-logo">
+        </div>
+    </div>
+
+    <script>
+        // Ensure video plays on all devices
+        const video = document.getElementById('bgVideo');
+        
+        // Set video properties for autoplay
+        video.setAttribute('autoplay', '');
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.muted = true;
+        video.volume = 0;
+        
+        // Autoplay function
+        function forcePlay() {
+            if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+                const playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('Video playing successfully');
+                    }).catch(error => {
+                        console.log('Auto-play prevented, retrying...', error);
+                        setTimeout(() => forcePlay(), 200);
+                    });
+                }
+            } else {
+                // Video not ready yet, wait and retry
+                setTimeout(() => forcePlay(), 100);
+            }
+        }
+
+        // Try to play immediately when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', forcePlay);
+        } else {
+            forcePlay();
+        }
+
+        // Force play on multiple events to ensure it works
+        video.addEventListener('loadstart', function() {
+            video.muted = true;
+        });
+        
+        video.addEventListener('loadeddata', function() {
+            video.muted = true;
+            forcePlay();
+        });
+        
+        video.addEventListener('canplay', function() {
+            video.muted = true;
+            forcePlay();
+        });
+        
+        video.addEventListener('canplaythrough', function() {
+            video.muted = true;
+            forcePlay();
+        });
+        
+        video.addEventListener('loadedmetadata', function() {
+            video.muted = true;
+            forcePlay();
+        });
+
+        video.addEventListener('error', function(e) {
+            console.error('Video error:', video.error);
+        });
+        
+        // Play when page becomes visible
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                video.muted = true;
+                forcePlay();
+            }
+        });
+
+        // Play on any user interaction (for mobile autoplay restrictions)
+        ['click', 'touchstart', 'touchend', 'keydown', 'mousedown', 'scroll'].forEach(event => {
+            document.addEventListener(event, function() {
+                video.muted = true;
+                forcePlay();
+            }, { once: true });
+        });
+
+        // Keep trying to play if paused
+        setInterval(function() {
+            if (video.paused && !video.ended && video.readyState >= 2) {
+                video.muted = true;
+                forcePlay();
+            }
+        }, 1000);
+
+        // Ensure video is muted on load
+        window.addEventListener('load', function() {
+            video.muted = true;
+            video.volume = 0;
+            forcePlay();
+        });
+    </script>
+</body>
+</html>
