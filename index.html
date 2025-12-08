@@ -91,6 +91,18 @@
                     drop-shadow(0 5px 20px rgba(0, 0, 0, 0.9));
         }
 
+        /* Disable hover effects on mobile */
+        @media (max-width: 768px) {
+            .sponsor-logo:hover {
+                transform: none;
+                filter: brightness(1.15) 
+                        drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
+                        drop-shadow(0 0 12px rgba(255, 255, 255, 0.4))
+                        drop-shadow(0 0 18px rgba(255, 255, 255, 0.3))
+                        drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
+            }
+        }
+
         /* Individual logo sizing adjustments */
         .sponsor-logo[alt="Maurten"] {
             max-height: 120px;
@@ -151,33 +163,44 @@
 
         @media (max-width: 768px) {
             .sponsors-section {
-                padding: 45px 30px 55px;
-                gap: 45px;
+                padding: 40px 25px 50px;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 30px 20px;
+                align-items: center;
+                justify-items: center;
             }
 
             .sponsor-item {
-                height: 95px;
+                height: auto;
+                width: 100%;
+                padding: 0 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .sponsor-logo {
-                max-height: 95px;
-                max-width: 260px;
+                max-height: 90px;
+                max-width: 100%;
+                width: 100%;
+                object-fit: contain;
             }
 
             .sponsor-logo[alt="Maurten"] {
-                max-height: 88px;
+                max-height: 85px;
             }
 
             .sponsor-logo[alt="Ciele Athletics"] {
-                max-height: 82px;
+                max-height: 80px;
             }
 
             .sponsor-logo[alt="Fenix"] {
-                max-height: 95px;
+                max-height: 90px;
             }
 
             .sponsor-logo[alt="Pabst Blue Ribbon"] {
-                max-height: 88px;
+                max-height: 85px;
             }
 
             .sponsor-logo[alt="HOKA"] {
@@ -187,37 +210,94 @@
 
         @media (max-width: 480px) {
             .sponsors-section {
-                padding: 40px 20px 50px;
-                gap: 35px;
+                padding: 35px 16px 45px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                gap: 0;
             }
 
             .sponsor-item {
-                height: 80px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 14px;
+            }
+
+            /* Top row: first 3 logos - each takes ~33% */
+            .sponsor-item:nth-child(1),
+            .sponsor-item:nth-child(2),
+            .sponsor-item:nth-child(3) {
+                flex: 0 0 calc(33.333% - 28px);
+                max-width: calc(33.333% - 28px);
+                margin-bottom: 32px;
+            }
+
+            /* Bottom row: last 2 logos - each takes ~33% to center them */
+            .sponsor-item:nth-child(4),
+            .sponsor-item:nth-child(5) {
+                flex: 0 0 calc(33.333% - 28px);
+                max-width: calc(33.333% - 28px);
             }
 
             .sponsor-logo {
-                max-height: 80px;
-                max-width: 220px;
+                max-height: 85px;
+                max-width: 100%;
+                width: auto;
+                object-fit: contain;
             }
 
             .sponsor-logo[alt="Maurten"] {
-                max-height: 75px;
-            }
-
-            .sponsor-logo[alt="Ciele Athletics"] {
-                max-height: 70px;
-            }
-
-            .sponsor-logo[alt="Fenix"] {
                 max-height: 80px;
             }
 
-            .sponsor-logo[alt="Pabst Blue Ribbon"] {
+            .sponsor-logo[alt="Ciele Athletics"] {
                 max-height: 75px;
             }
 
+            .sponsor-logo[alt="Fenix"] {
+                max-height: 85px;
+            }
+
+            .sponsor-logo[alt="Pabst Blue Ribbon"] {
+                max-height: 80px;
+            }
+
             .sponsor-logo[alt="HOKA"] {
-                max-height: 68px;
+                max-height: 75px;
+            }
+        }
+
+        /* Extra small phones */
+        @media (max-width: 360px) {
+            .sponsors-section {
+                padding: 30px 12px 40px;
+                gap: 25px 16px;
+            }
+
+            .sponsor-logo {
+                max-height: 75px;
+            }
+
+            .sponsor-logo[alt="Maurten"] {
+                max-height: 70px;
+            }
+
+            .sponsor-logo[alt="Ciele Athletics"] {
+                max-height: 65px;
+            }
+
+            .sponsor-logo[alt="Fenix"] {
+                max-height: 75px;
+            }
+
+            .sponsor-logo[alt="Pabst Blue Ribbon"] {
+                max-height: 70px;
+            }
+
+            .sponsor-logo[alt="HOKA"] {
+                max-height: 65px;
             }
         }
 
@@ -247,6 +327,10 @@
                         0 4px 15px rgba(0, 0, 0, 0.5);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
+            -webkit-tap-highlight-color: transparent;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .tickets-button:hover {
@@ -273,12 +357,39 @@
                 padding: 16px 35px;
                 font-size: 18px;
             }
+
+            .tickets-button-container {
+                top: 42%;
+            }
         }
 
         @media (max-width: 480px) {
             .tickets-button {
                 padding: 14px 28px;
                 font-size: 16px;
+                pointer-events: auto;
+                touch-action: manipulation;
+            }
+
+            .tickets-button-container {
+                top: 35%;
+                z-index: 20;
+                pointer-events: none;
+            }
+
+            .tickets-button-container .tickets-button {
+                pointer-events: auto;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .tickets-button {
+                padding: 12px 24px;
+                font-size: 15px;
+            }
+
+            .tickets-button-container {
+                top: 32%;
             }
         }
     </style>
