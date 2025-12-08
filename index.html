@@ -26,6 +26,7 @@
             height: 100%;
             z-index: -1;
             overflow: hidden;
+            background: #000;
         }
 
         /* Main video */
@@ -285,7 +286,7 @@
 <body>
     <div class="video-container">
         <video id="bgVideo" autoplay muted loop playsinline preload="auto" webkit-playsinline>
-            <source src="trippy.mp4" type="video/mp4">
+            <source src="final-urcm2.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
@@ -377,6 +378,26 @@
 
         video.addEventListener('error', function(e) {
             console.error('Video error:', video.error);
+            console.error('Video error code:', video.error ? video.error.code : 'unknown');
+            console.error('Video error message:', video.error ? video.error.message : 'unknown');
+        });
+        
+        // Log video loading progress
+        video.addEventListener('loadstart', function() {
+            console.log('Video load started');
+        });
+        
+        video.addEventListener('loadedmetadata', function() {
+            console.log('Video metadata loaded:', {
+                duration: video.duration,
+                videoWidth: video.videoWidth,
+                videoHeight: video.videoHeight,
+                readyState: video.readyState
+            });
+        });
+        
+        video.addEventListener('canplay', function() {
+            console.log('Video can play');
         });
         
         // Play when page becomes visible

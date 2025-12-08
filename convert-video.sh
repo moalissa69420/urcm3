@@ -8,8 +8,8 @@ if ! command -v ffmpeg &> /dev/null; then
     brew install ffmpeg
 fi
 
-echo "Converting trippyvideo.mov to web-optimized MP4..."
-ffmpeg -i trippyvideo.mov \
+echo "Converting final-urcm2.mov to web-optimized MP4..."
+ffmpeg -i final-urcm2.mov \
   -c:v libx264 \
   -preset medium \
   -crf 23 \
@@ -17,9 +17,10 @@ ffmpeg -i trippyvideo.mov \
   -b:a 128k \
   -movflags +faststart \
   -vf "scale=1920:-2" \
-  trippyvideo.mp4
+  final-urcm2.mp4
 
-echo "Conversion complete! trippyvideo.mp4 is ready for web use."
+echo "Conversion complete! final-urcm2.mp4 is ready for web use."
+
 
 
 
