@@ -55,8 +55,19 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             gap: 70px;
+        }
+        
+        /* Prevent logos from moving on desktop resize */
+        @media (min-width: 1025px) {
+            .sponsors-section {
+                flex-wrap: nowrap;
+            }
+            
+            .sponsor-item {
+                flex-shrink: 0;
+            }
         }
 
         .sponsor-item {
@@ -65,6 +76,8 @@
             justify-content: center;
             height: 130px;
             padding: 0 20px;
+            flex: 0 0 auto;
+            min-width: 0;
         }
 
         .sponsor-logo {
@@ -154,6 +167,7 @@
             .sponsors-section {
                 padding: 50px 50px 60px;
                 gap: 55px;
+                min-width: auto;
             }
 
             .sponsor-item {
