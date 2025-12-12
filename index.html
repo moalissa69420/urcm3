@@ -57,16 +57,148 @@
             align-items: center;
             flex-wrap: nowrap;
             gap: 70px;
+            overflow: visible;
+            box-sizing: border-box;
         }
         
-        /* Prevent logos from moving on desktop resize */
+        /* Prevent logos from moving on desktop resize - always visible */
         @media (min-width: 1025px) {
             .sponsors-section {
                 flex-wrap: nowrap;
+                gap: clamp(15px, 3vw, 70px);
+                padding-left: clamp(10px, 3vw, 80px);
+                padding-right: clamp(10px, 3vw, 80px);
+                padding-top: clamp(40px, 5vw, 60px);
+                padding-bottom: clamp(50px, 6vw, 70px);
+                overflow: visible;
+                box-sizing: border-box;
             }
             
             .sponsor-item {
-                flex-shrink: 0;
+                flex-shrink: 1;
+                flex-grow: 0;
+                min-width: 0;
+                max-width: 100%;
+            }
+            
+            .sponsor-logo {
+                max-width: 100%;
+                height: auto;
+                width: auto;
+                object-fit: contain;
+            }
+            
+            /* Ensure HOKA is always 3x bigger on desktop */
+            .sponsor-logo[alt="HOKA"] {
+                max-height: 450px !important;
+                max-width: none !important;
+                width: auto !important;
+                min-width: auto !important;
+            width: auto !important;
+            height: auto !important;
+            min-width: auto !important;
+        }
+        }
+        
+        /* Extra wide screens - ensure HOKA is big */
+        @media (min-width: 1601px) {
+            .sponsor-logo[alt="HOKA"] {
+                max-height: 450px !important;
+                max-width: none !important;
+                width: auto !important;
+            }
+        }
+        
+        /* Scale logos proportionally on smaller desktop windows to keep them visible */
+        @media (min-width: 1025px) and (max-width: 1600px) {
+            .sponsor-logo {
+                max-height: clamp(90px, 8vw, 130px);
+            }
+            
+            .sponsor-logo[alt="Maurten"] {
+                max-height: clamp(85px, 7.5vw, 120px);
+            }
+            
+            .sponsor-logo[alt="Ciele Athletics"] {
+                max-height: clamp(80px, 7vw, 115px);
+            }
+            
+            .sponsor-logo[alt="Fenix"] {
+                max-height: clamp(90px, 8vw, 130px);
+            }
+            
+            .sponsor-logo[alt="Pabst Blue Ribbon"] {
+                max-height: clamp(85px, 7.5vw, 120px);
+            }
+            
+            .sponsor-logo[alt="HOKA"] {
+                max-height: clamp(300px, 25vw, 450px) !important;
+                max-width: none !important;
+                width: auto !important;
+            }
+        }
+        
+        @media (min-width: 1025px) and (max-width: 1400px) {
+            .sponsors-section {
+                gap: clamp(12px, 2.5vw, 60px);
+            }
+            
+            .sponsor-logo {
+                max-height: clamp(80px, 7vw, 120px);
+            }
+            
+            .sponsor-logo[alt="Maurten"] {
+                max-height: clamp(75px, 6.5vw, 110px);
+            }
+            
+            .sponsor-logo[alt="Ciele Athletics"] {
+                max-height: clamp(70px, 6vw, 105px);
+            }
+            
+            .sponsor-logo[alt="Fenix"] {
+                max-height: clamp(80px, 7vw, 120px);
+            }
+            
+            .sponsor-logo[alt="Pabst Blue Ribbon"] {
+                max-height: clamp(75px, 6.5vw, 110px);
+            }
+            
+            .sponsor-logo[alt="HOKA"] {
+                max-height: clamp(240px, 20vw, 420px) !important;
+                max-width: none !important;
+                width: auto !important;
+            }
+        }
+        
+        @media (min-width: 1025px) and (max-width: 1200px) {
+            .sponsors-section {
+                gap: clamp(10px, 2vw, 50px);
+            }
+            
+            .sponsor-logo {
+                max-height: clamp(70px, 6vw, 110px);
+            }
+            
+            .sponsor-logo[alt="Maurten"] {
+                max-height: clamp(65px, 5.5vw, 100px);
+            }
+            
+            .sponsor-logo[alt="Ciele Athletics"] {
+                max-height: clamp(60px, 5vw, 95px);
+            }
+            
+            .sponsor-logo[alt="Fenix"] {
+                max-height: clamp(70px, 6vw, 110px);
+            }
+            
+            .sponsor-logo[alt="Pabst Blue Ribbon"] {
+                max-height: clamp(65px, 5.5vw, 100px);
+            }
+            
+            .sponsor-logo[alt="HOKA"] {
+                max-height: clamp(240px, 20vw, 450px) !important;
+                max-width: none !important;
+                width: auto !important;
             }
         }
 
@@ -84,6 +216,7 @@
             max-height: 130px;
             width: auto;
             max-width: 400px;
+            min-width: 80px;
             object-fit: contain;
             filter: brightness(1.15) 
                     drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
@@ -92,6 +225,30 @@
                     drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
             opacity: 0.95;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* HOKA logo - override max-width constraint */
+        .sponsor-logo[alt="HOKA"] {
+            max-width: none !important;
+            width: auto !important;
+            min-width: auto !important;
+        }
+        
+        /* Scale logos down on smaller desktop windows */
+        @media (min-width: 1025px) and (max-width: 1400px) {
+            .sponsor-logo {
+                max-height: clamp(100px, 10vw, 130px);
+            }
+        }
+        
+        @media (min-width: 1025px) and (max-width: 1200px) {
+            .sponsors-section {
+                gap: clamp(20px, 3vw, 50px);
+            }
+            
+            .sponsor-logo {
+                max-height: clamp(90px, 9vw, 120px);
+            }
         }
 
         .sponsor-logo:hover {
@@ -158,8 +315,14 @@
                     drop-shadow(0 5px 20px rgba(0, 0, 0, 0.9));
         }
 
-        .sponsor-logo[alt="HOKA"] {
-            max-height: 130px;
+        /* Desktop HOKA sizing - only applies to desktop */
+        @media (min-width: 1025px) {
+            .sponsor-logo[alt="HOKA"] {
+                max-height: 450px !important;
+                max-width: none !important;
+                width: auto !important;
+                min-width: auto !important;
+            }
         }
 
         /* Responsive adjustments */
@@ -201,7 +364,7 @@
             }
 
             .sponsor-logo[alt="HOKA"] {
-                max-height: 90px;
+                max-height: 110px;
             }
         }
 
@@ -253,7 +416,7 @@
             }
 
             .sponsor-logo[alt="HOKA"] {
-                max-height: 80px;
+                max-height: 90px;
             }
         }
 
@@ -319,7 +482,7 @@
             }
 
             .sponsor-logo[alt="HOKA"] {
-                max-height: 75px;
+                max-height: 85px;
             }
         }
 
@@ -356,7 +519,7 @@
             }
 
             .sponsor-logo[alt="HOKA"] {
-                max-height: 65px;
+                max-height: 75px;
             }
         }
 
@@ -374,7 +537,7 @@
         }
 
         .nocturnal-logo {
-            max-height: 130px;
+            max-height: 390px;
             width: auto;
             filter: brightness(0) 
                     drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
@@ -465,7 +628,7 @@
             }
 
             .nocturnal-logo {
-                max-height: 90px;
+                max-height: 270px;
             }
 
             .nocturnal-logo-container {
@@ -485,7 +648,7 @@
 
         @media (max-width: 480px) {
             .nocturnal-logo {
-                max-height: 85px;
+                max-height: 255px;
             }
 
             .nocturnal-logo-container {
@@ -512,7 +675,7 @@
 
         @media (max-width: 360px) {
             .nocturnal-logo {
-                max-height: 75px;
+                max-height: 225px;
             }
 
             .nocturnal-logo-container {
@@ -533,7 +696,7 @@
 </head>
 <body>
     <div class="video-container">
-        <video id="bgVideo" autoplay muted loop playsinline preload="auto" webkit-playsinline>
+        <video id="bgVideo" autoplay muted loop playsinline preload="auto" webkit-playsinline x-webkit-airplay="allow">
             <source src="final-urcm2.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -577,12 +740,20 @@
         // Ensure video plays on all devices
         const video = document.getElementById('bgVideo');
         
-        // Set video properties for autoplay
+        // Set video properties for autoplay (Safari compatible)
         video.setAttribute('autoplay', '');
         video.setAttribute('muted', '');
         video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
         video.muted = true;
         video.volume = 0;
+        
+        // Safari-specific autoplay fix
+        if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+            video.playsInline = true;
+            video.setAttribute('playsinline', 'true');
+            video.setAttribute('webkit-playsinline', 'true');
+        }
         
         // Autoplay function
         function forcePlay() {
