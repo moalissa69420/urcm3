@@ -51,6 +51,9 @@
             left: 0;
             width: 100%;
             z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 60px 80px 70px;
             display: flex;
             justify-content: center;
@@ -75,10 +78,11 @@
             }
             
             .sponsor-item {
-                flex-shrink: 1;
+                flex-shrink: 0;
                 flex-grow: 0;
                 min-width: 0;
-                max-width: 100%;
+                max-width: none;
+                padding: 0 15px;
             }
             
             .sponsor-logo {
@@ -88,21 +92,20 @@
                 object-fit: contain;
             }
             
-            /* Ensure HOKA is always bigger on desktop */
+            /* HOKA matches other logos */
             .sponsor-logo[alt="HOKA"] {
-                max-height: 200px !important;
-                max-width: none !important;
+                max-height: 130px !important;
+                max-width: 400px !important;
                 width: auto !important;
-                min-width: auto !important;
+                min-width: 80px !important;
             }
         }
-        }
         
-        /* Extra wide screens - ensure HOKA is big */
+        /* Extra wide screens - HOKA matches others */
         @media (min-width: 1601px) {
             .sponsor-logo[alt="HOKA"] {
-                max-height: 200px !important;
-                max-width: none !important;
+                max-height: 130px !important;
+                max-width: 400px !important;
                 width: auto !important;
             }
         }
@@ -130,8 +133,8 @@
             }
             
             .sponsor-logo[alt="HOKA"] {
-                max-height: clamp(150px, 12vw, 200px) !important;
-                max-width: none !important;
+                max-height: clamp(90px, 8vw, 130px) !important;
+                max-width: 400px !important;
                 width: auto !important;
             }
         }
@@ -162,8 +165,8 @@
             }
             
             .sponsor-logo[alt="HOKA"] {
-                max-height: clamp(140px, 11vw, 190px) !important;
-                max-width: none !important;
+                max-height: clamp(80px, 7vw, 120px) !important;
+                max-width: 400px !important;
                 width: auto !important;
             }
         }
@@ -194,8 +197,8 @@
             }
             
             .sponsor-logo[alt="HOKA"] {
-                max-height: clamp(140px, 11vw, 200px) !important;
-                max-width: none !important;
+                max-height: clamp(70px, 6vw, 110px) !important;
+                max-width: 400px !important;
                 width: auto !important;
             }
         }
@@ -205,9 +208,10 @@
             align-items: center;
             justify-content: center;
             height: 130px;
-            padding: 0 20px;
+            padding: 0 15px;
             flex: 0 0 auto;
             min-width: 0;
+            flex-shrink: 0;
         }
 
         .sponsor-logo {
@@ -225,11 +229,11 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        /* HOKA logo - override max-width constraint */
+        /* HOKA logo - matches other logos */
         .sponsor-logo[alt="HOKA"] {
-            max-width: none !important;
+            max-width: 400px !important;
             width: auto !important;
-            min-width: auto !important;
+            min-width: 80px !important;
         }
         
         /* Scale logos down on smaller desktop windows */
@@ -316,10 +320,10 @@
         /* Desktop HOKA sizing - only applies to desktop */
         @media (min-width: 1025px) {
             .sponsor-logo[alt="HOKA"] {
-                max-height: 200px !important;
-                max-width: none !important;
+                max-height: 130px !important;
+                max-width: 400px !important;
                 width: auto !important;
-                min-width: auto !important;
+                min-width: 80px !important;
             }
         }
 
