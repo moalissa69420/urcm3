@@ -862,11 +862,25 @@
             }
         }, 1000);
 
-        // Ensure video is muted on load
+        // Ensure video is muted on load and start at 5 seconds
         window.addEventListener('load', function() {
             video.muted = true;
             video.volume = 0;
+            // Start video at 5 second mark
+            video.currentTime = 5;
             forcePlay();
+        });
+        
+        // Also set currentTime when video metadata is loaded
+        video.addEventListener('loadedmetadata', function() {
+            video.currentTime = 5;
+        });
+        
+        // Set currentTime when video can play
+        video.addEventListener('canplay', function() {
+            if (video.currentTime < 5) {
+                video.currentTime = 5;
+            }
         });
     </script>
 </body>
