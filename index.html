@@ -229,12 +229,14 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        /* HOKA logo - bigger on desktop */
-        .sponsor-logo[alt="HOKA"] {
-            max-height: 500px !important;
-            max-width: 1200px !important;
-            width: auto !important;
-            min-width: 240px !important;
+        /* HOKA logo - bigger on desktop only */
+        @media (min-width: 1025px) {
+            .sponsor-logo[alt="HOKA"] {
+                max-height: 500px !important;
+                max-width: 1200px !important;
+                width: auto !important;
+                min-width: 240px !important;
+            }
         }
         
         /* Scale logos down on smaller desktop windows */
@@ -367,7 +369,8 @@
             }
 
             .sponsor-logo[alt="HOKA"] {
-                max-height: 35px;
+                max-height: 110px !important;
+                max-width: 320px !important;
             }
         }
 
@@ -419,7 +422,8 @@
             }
 
             .sponsor-logo[alt="HOKA"] {
-                max-height: 30px;
+                max-height: 90px !important;
+                max-width: 100% !important;
             }
         }
 
@@ -522,7 +526,8 @@
             }
 
             .sponsor-logo[alt="HOKA"] {
-                max-height: 25px;
+                max-height: 75px !important;
+                max-width: 100% !important;
             }
         }
 
