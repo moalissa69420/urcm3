@@ -98,11 +98,6 @@
                 max-width: 1200px !important;
                 width: auto !important;
                 min-width: 240px !important;
-                filter: invert(1) brightness(0) 
-                        drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
-                        drop-shadow(0 0 12px rgba(255, 255, 255, 0.4))
-                        drop-shadow(0 0 18px rgba(255, 255, 255, 0.3))
-                        drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
             }
         }
         
@@ -112,11 +107,6 @@
                 max-height: 560px !important;
                 max-width: 1300px !important;
                 width: auto !important;
-                filter: invert(1) brightness(0) 
-                        drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
-                        drop-shadow(0 0 12px rgba(255, 255, 255, 0.4))
-                        drop-shadow(0 0 18px rgba(255, 255, 255, 0.3))
-                        drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
             }
         }
         
@@ -146,11 +136,6 @@
                 max-height: clamp(300px, 24vw, 500px) !important;
                 max-width: 1200px !important;
                 width: auto !important;
-                filter: invert(1) brightness(0) 
-                        drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
-                        drop-shadow(0 0 12px rgba(255, 255, 255, 0.4))
-                        drop-shadow(0 0 18px rgba(255, 255, 255, 0.3))
-                        drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
             }
         }
         
@@ -183,11 +168,6 @@
                 max-height: clamp(260px, 22vw, 440px) !important;
                 max-width: 1200px !important;
                 width: auto !important;
-                filter: invert(1) brightness(0) 
-                        drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
-                        drop-shadow(0 0 12px rgba(255, 255, 255, 0.4))
-                        drop-shadow(0 0 18px rgba(255, 255, 255, 0.3))
-                        drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
             }
         }
         
@@ -220,11 +200,6 @@
                 max-height: clamp(70px, 6vw, 110px) !important;
                 max-width: 400px !important;
                 width: auto !important;
-                filter: invert(1) brightness(0) 
-                        drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
-                        drop-shadow(0 0 12px rgba(255, 255, 255, 0.4))
-                        drop-shadow(0 0 18px rgba(255, 255, 255, 0.3))
-                        drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
             }
         }
 
@@ -260,6 +235,15 @@
             -webkit-user-select: none;
         }
         
+        /* HOKA logo - make white logo black with same glow */
+        .sponsor-logo[alt="HOKA"] {
+            filter: invert(1) brightness(0) 
+                    drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
+                    drop-shadow(0 0 12px rgba(255, 255, 255, 0.4))
+                    drop-shadow(0 0 18px rgba(255, 255, 255, 0.3))
+                    drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
+        }
+        
         /* HOKA logo - bigger on desktop only */
         @media (min-width: 1025px) {
             .sponsor-logo[alt="HOKA"] {
@@ -267,11 +251,6 @@
                 max-width: 1200px !important;
                 width: auto !important;
                 min-width: 240px !important;
-                filter: invert(1) brightness(0) 
-                        drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
-                        drop-shadow(0 0 12px rgba(255, 255, 255, 0.4))
-                        drop-shadow(0 0 18px rgba(255, 255, 255, 0.3))
-                        drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
             }
         }
         
@@ -296,6 +275,14 @@
             opacity: 1;
             transform: translateY(-3px) scale(1.1);
             filter: brightness(1.25) 
+                    drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))
+                    drop-shadow(0 0 16px rgba(255, 255, 255, 0.6))
+                    drop-shadow(0 0 24px rgba(255, 255, 255, 0.4))
+                    drop-shadow(0 5px 20px rgba(0, 0, 0, 0.9));
+        }
+        
+        .sponsor-logo[alt="HOKA"]:hover {
+            filter: invert(1) brightness(0) 
                     drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))
                     drop-shadow(0 0 16px rgba(255, 255, 255, 0.6))
                     drop-shadow(0 0 24px rgba(255, 255, 255, 0.4))
@@ -365,11 +352,6 @@
                 max-width: 1200px !important;
                 width: auto !important;
                 min-width: 240px !important;
-                filter: invert(1) brightness(0) 
-                        drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
-                        drop-shadow(0 0 12px rgba(255, 255, 255, 0.4))
-                        drop-shadow(0 0 18px rgba(255, 255, 255, 0.3))
-                        drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
             }
         }
 
@@ -853,7 +835,7 @@
             <img src="sponsors/Pabst Blue Ribbon.png" alt="Pabst Blue Ribbon" class="sponsor-logo">
         </div>
         <div class="sponsor-item">
-            <img src="sponsors/Hoka - PNG white.png" alt="HOKA" class="sponsor-logo">
+            <img src="sponsors/Hoka%20-%20PNG%20white.png" alt="HOKA" class="sponsor-logo">
         </div>
     </div>
 
