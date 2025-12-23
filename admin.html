@@ -584,9 +584,22 @@
 
         // Add a lap
         function addLap(category, runnerId) {
-            const ref = database.ref(`${category}/${runnerId}/laps`);
-            ref.transaction((currentLaps) => {
-                return (currentLaps || 0) + 1;
+            const lapsRef = database.ref(`${category}/${runnerId}/laps`);
+            const startTimeRef = database.ref(`${category}/${runnerId}/startTime`);
+            
+            lapsRef.transaction((currentLaps) => {
+                const newLaps = (currentLaps || 0) + 1;
+                
+                // If this is the first lap, set start time
+                if (newLaps === 1) {
+                    startTimeRef.once('value', (snapshot) => {
+                        if (!snapshot.exists()) {
+                            startTimeRef.set(Date.now());
+                        }
+                    });
+                }
+                
+                return newLaps;
             });
         }
 
@@ -615,15 +628,26 @@
 
         // Set status (finisher or DNF)
         function setStatus(category, runnerId, status) {
-            const ref = database.ref(`${category}/${runnerId}/status`);
+            const statusRef = database.ref(`${category}/${runnerId}/status`);
+            const finishTimeRef = database.ref(`${category}/${runnerId}/finishTime`);
+            
             if (status === '') {
-                ref.remove().then(() => {
+                // Clear status and finish time
+                statusRef.remove().then(() => {
+                    finishTimeRef.remove();
                     console.log('Status cleared');
                 }).catch((error) => {
                     alert('Error clearing status: ' + error.message);
                 });
             } else {
-                ref.set(status).then(() => {
+                statusRef.set(status).then(() => {
+                    // If marking as finisher, set finish time
+                    if (status === 'finisher') {
+                        finishTimeRef.set(Date.now());
+                    } else {
+                        // If DNF, remove finish time if it exists
+                        finishTimeRef.remove();
+                    }
                     console.log(`Status set to ${status}`);
                 }).catch((error) => {
                     alert('Error setting status: ' + error.message);

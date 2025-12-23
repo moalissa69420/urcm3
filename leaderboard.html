@@ -61,7 +61,7 @@
 
         .leaderboard-header {
             display: grid;
-            grid-template-columns: 60px 1fr 120px 100px;
+            grid-template-columns: 60px 1fr 120px 100px 120px;
             gap: 15px;
             padding: 15px 20px;
             background: rgba(0,0,0,0.05);
@@ -74,7 +74,7 @@
 
         .runner-row {
             display: grid;
-            grid-template-columns: 60px 1fr 120px 100px;
+            grid-template-columns: 60px 1fr 120px 100px 120px;
             gap: 15px;
             padding: 18px 20px;
             border-bottom: 1px solid #f0f0f0;
@@ -143,6 +143,13 @@
             text-align: right;
         }
 
+        .finish-time {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #48bb78;
+            text-align: right;
+        }
+
         .loading {
             text-align: center;
             color: white;
@@ -184,7 +191,7 @@
             }
 
             .runner-row {
-                grid-template-columns: 50px 1fr 90px 80px;
+                grid-template-columns: 50px 1fr 90px 80px 90px;
                 gap: 10px;
                 padding: 15px;
             }
@@ -220,16 +227,20 @@
             }
 
             .leaderboard-header {
-                grid-template-columns: 40px 1fr 70px 65px;
+                grid-template-columns: 40px 1fr 70px 65px 80px;
                 gap: 8px;
                 padding: 10px 12px;
                 font-size: 0.7em;
             }
 
             .runner-row {
-                grid-template-columns: 40px 1fr 70px 65px;
+                grid-template-columns: 40px 1fr 70px 65px 80px;
                 gap: 8px;
                 padding: 12px;
+            }
+            
+            .finish-time {
+                font-size: 0.85em;
             }
 
             .rank {
@@ -463,6 +474,7 @@
                         <div>Runner</div>
                         <div>Laps</div>
                         <div>Distance</div>
+                        <div>Time</div>
                     </div>
                     <div id="solo-list"></div>
                 </div>
@@ -506,6 +518,24 @@
             renderSolo(data.solo || {});
         }
 
+        // Format time duration
+        function formatTime(startTime, finishTime) {
+            if (!startTime) return '-';
+            
+            const endTime = finishTime || Date.now();
+            const duration = endTime - startTime;
+            
+            const hours = Math.floor(duration / (1000 * 60 * 60));
+            const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((duration % (1000 * 60)) / 1000);
+            
+            if (hours > 0) {
+                return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
         function renderTeams(teams) {
             const teamsList = document.getElementById('teams-list');
             const teamsArray = Object.entries(teams).map(([id, team]) => ({
@@ -526,6 +556,7 @@
                     : status === 'dnf' 
                     ? '<span class="status-badge dnf">DNF</span>' 
                     : '';
+                const timeDisplay = team.startTime ? formatTime(team.startTime, team.finishTime) : '-';
 
                 return `
                     <div class="runner-row">
@@ -533,6 +564,7 @@
                         <div class="name">${team.name}${statusBadge}</div>
                         <div class="laps">${team.laps} laps</div>
                         <div class="distance">${team.distance}km</div>
+                        <div class="finish-time">${timeDisplay}</div>
                     </div>
                 `;
             }).join('');
@@ -558,6 +590,7 @@
                     : status === 'dnf' 
                     ? '<span class="status-badge dnf">DNF</span>' 
                     : '';
+                const timeDisplay = runner.startTime ? formatTime(runner.startTime, runner.finishTime) : '-';
 
                 return `
                     <div class="runner-row">
@@ -565,6 +598,7 @@
                         <div class="name">${runner.name}${statusBadge}</div>
                         <div class="laps">${runner.laps} laps</div>
                         <div class="distance">${runner.distance}km</div>
+                        <div class="finish-time">${timeDisplay}</div>
                     </div>
                 `;
             }).join('');
