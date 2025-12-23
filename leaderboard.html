@@ -306,6 +306,25 @@
                     drop-shadow(0 5px 20px rgba(0, 0, 0, 0.9));
         }
 
+        /* Reorder logos on desktop: HOKA left, Maurten center, Pabst right */
+        @media (min-width: 1025px) {
+            .sponsor-item:nth-child(1) {
+                order: 3; /* Maurten moves to center */
+            }
+            
+            .sponsor-item:nth-child(3) {
+                order: 4; /* Fenix moves to 4th position */
+            }
+            
+            .sponsor-item:nth-child(4) {
+                order: 5; /* Pabst moves to right side */
+            }
+            
+            .sponsor-item:nth-child(5) {
+                order: 1; /* HOKA moves to left side */
+            }
+        }
+
         /* Individual logo sizing */
         .sponsor-logo[alt="Maurten"] {
             max-height: 90px;
