@@ -225,6 +225,142 @@
                 font-size: 0.95em;
             }
         }
+
+        /* Sponsors Section */
+        .sponsors-section {
+            margin-top: 50px;
+            padding: 40px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .sponsor-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 15px;
+        }
+
+        .sponsor-logo {
+            max-height: 100px;
+            width: auto;
+            max-width: 200px;
+            object-fit: contain;
+            filter: brightness(1.15) 
+                    drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
+                    drop-shadow(0 0 12px rgba(255, 255, 255, 0.4))
+                    drop-shadow(0 0 18px rgba(255, 255, 255, 0.3))
+                    drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
+            opacity: 0.95;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sponsor-logo:hover {
+            opacity: 1;
+            transform: translateY(-3px) scale(1.1);
+            filter: brightness(1.25) 
+                    drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))
+                    drop-shadow(0 0 16px rgba(255, 255, 255, 0.6))
+                    drop-shadow(0 0 24px rgba(255, 255, 255, 0.4))
+                    drop-shadow(0 5px 20px rgba(0, 0, 0, 0.9));
+        }
+
+        /* Individual logo sizing */
+        .sponsor-logo[alt="Maurten"] {
+            max-height: 90px;
+        }
+
+        .sponsor-logo[alt="Ciele Athletics"] {
+            max-height: 85px;
+        }
+
+        .sponsor-logo[alt="Fenix"] {
+            max-height: 100px;
+        }
+
+        .sponsor-logo[alt="Pabst Blue Ribbon"] {
+            max-height: 90px;
+        }
+
+        .sponsor-logo[alt="HOKA"] {
+            max-height: 85px;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .sponsors-section {
+                padding: 30px 15px;
+                gap: 25px;
+            }
+
+            .sponsor-logo {
+                max-height: 70px;
+            }
+
+            .sponsor-logo[alt="Maurten"] {
+                max-height: 65px;
+            }
+
+            .sponsor-logo[alt="Ciele Athletics"] {
+                max-height: 60px;
+            }
+
+            .sponsor-logo[alt="Fenix"] {
+                max-height: 70px;
+            }
+
+            .sponsor-logo[alt="Pabst Blue Ribbon"] {
+                max-height: 65px;
+            }
+
+            .sponsor-logo[alt="HOKA"] {
+                max-height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sponsors-section {
+                padding: 25px 10px;
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+
+            .sponsor-item {
+                flex: 0 0 calc(50% - 10px);
+                max-width: calc(50% - 10px);
+            }
+
+            .sponsor-logo {
+                max-height: 60px;
+                max-width: 100%;
+            }
+
+            .sponsor-logo[alt="Maurten"] {
+                max-height: 55px;
+            }
+
+            .sponsor-logo[alt="Ciele Athletics"] {
+                max-height: 50px;
+            }
+
+            .sponsor-logo[alt="Fenix"] {
+                max-height: 60px;
+            }
+
+            .sponsor-logo[alt="Pabst Blue Ribbon"] {
+                max-height: 55px;
+            }
+
+            .sponsor-logo[alt="HOKA"] {
+                max-height: 50px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -264,6 +400,25 @@
                     </div>
                     <div id="solo-list"></div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Sponsors Section -->
+        <div class="sponsors-section">
+            <div class="sponsor-item">
+                <img src="sponsors/maurten.png" alt="Maurten" class="sponsor-logo">
+            </div>
+            <div class="sponsor-item">
+                <img src="sponsors/ciele athletics.png" alt="Ciele Athletics" class="sponsor-logo">
+            </div>
+            <div class="sponsor-item">
+                <img src="sponsors/fenix.webp" alt="Fenix" class="sponsor-logo">
+            </div>
+            <div class="sponsor-item">
+                <img src="sponsors/Pabst Blue Ribbon.png" alt="Pabst Blue Ribbon" class="sponsor-logo">
+            </div>
+            <div class="sponsor-item">
+                <img src="sponsors/HOKA.png" alt="HOKA" class="sponsor-logo">
             </div>
         </div>
     </div>
