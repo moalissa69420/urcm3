@@ -92,10 +92,10 @@
                 object-fit: contain;
             }
             
-            /* HOKA on desktop - smaller */
+            /* HOKA on desktop - smaller to prevent cropping */
             .sponsor-logo[alt="HOKA"] {
-                max-height: 95px !important;
-                max-width: 300px !important;
+                max-height: 85px !important;
+                max-width: 250px !important;
                 width: auto !important;
             }
         }
@@ -103,8 +103,8 @@
         /* Extra wide screens - HOKA smaller */
         @media (min-width: 1601px) {
             .sponsor-logo[alt="HOKA"] {
-                max-height: 95px !important;
-                max-width: 300px !important;
+                max-height: 85px !important;
+                max-width: 250px !important;
                 width: auto !important;
             }
         }
@@ -132,8 +132,8 @@
             }
             
             .sponsor-logo[alt="HOKA"] {
-                max-height: clamp(80px, 6vw, 95px) !important;
-                max-width: 300px !important;
+                max-height: clamp(70px, 5.5vw, 85px) !important;
+                max-width: 250px !important;
                 width: auto !important;
             }
         }
@@ -164,8 +164,8 @@
             }
             
             .sponsor-logo[alt="HOKA"] {
-                max-height: clamp(80px, 6vw, 95px) !important;
-                max-width: 300px !important;
+                max-height: clamp(70px, 5.5vw, 85px) !important;
+                max-width: 250px !important;
                 width: auto !important;
             }
         }
@@ -243,11 +243,11 @@
                     drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
         }
         
-        /* HOKA logo - smaller on desktop */
+        /* HOKA logo - smaller on desktop to prevent cropping */
         @media (min-width: 1025px) {
             .sponsor-logo[alt="HOKA"] {
-                max-height: 95px !important;
-                max-width: 300px !important;
+                max-height: 85px !important;
+                max-width: 250px !important;
                 width: auto !important;
             }
         }
