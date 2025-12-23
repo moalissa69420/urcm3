@@ -566,7 +566,7 @@
                     drop-shadow(0 5px 20px rgba(0, 0, 0, 0.9));
         }
 
-        /* Get Tickets Button */
+        /* Button Container */
         .tickets-button-container {
             position: fixed;
             top: 50%;
@@ -574,9 +574,15 @@
             transform: translate(-50%, -50%);
             z-index: 100;
             pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
         
-        .tickets-button-container .tickets-button {
+        .tickets-button-container .tickets-button,
+        .tickets-button-container .leaderboard-button,
+        .tickets-button-container .runner-guide-button {
             pointer-events: auto;
         }
         
@@ -629,6 +635,46 @@
             transform: translateY(0) scale(1.02);
         }
 
+        /* Leaderboard and Runner Guide Buttons - same style as tickets button */
+        .leaderboard-button,
+        .runner-guide-button {
+            display: inline-block;
+            padding: 18px 45px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.6),
+                        0 0 20px rgba(255, 255, 255, 0.4),
+                        0 0 30px rgba(255, 255, 255, 0.3),
+                        0 4px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            -webkit-tap-highlight-color: transparent;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .leaderboard-button:hover,
+        .runner-guide-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8),
+                        0 0 25px rgba(255, 255, 255, 0.6),
+                        0 0 35px rgba(255, 255, 255, 0.4),
+                        0 6px 20px rgba(0, 0, 0, 0.6);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .leaderboard-button:active,
+        .runner-guide-button:active {
+            transform: translateY(0) scale(1.02);
+        }
+
         /* Ensure video plays on mobile */
         @media (max-width: 768px) {
             .video-container video {
@@ -644,7 +690,9 @@
                 padding: 20px 0;
             }
 
-            .tickets-button {
+            .tickets-button,
+            .leaderboard-button,
+            .runner-guide-button {
                 padding: 16px 35px;
                 font-size: 18px;
             }
@@ -652,6 +700,7 @@
             .tickets-button-container {
                 top: 42%;
                 z-index: 100;
+                gap: 12px;
             }
         }
 
@@ -664,7 +713,9 @@
                 padding: 15px 0;
             }
 
-            .tickets-button {
+            .tickets-button,
+            .leaderboard-button,
+            .runner-guide-button {
                 padding: 14px 28px;
                 font-size: 16px;
                 pointer-events: auto;
@@ -675,9 +726,12 @@
                 top: 35%;
                 z-index: 100;
                 pointer-events: none;
+                gap: 10px;
             }
 
-            .tickets-button-container .tickets-button {
+            .tickets-button-container .tickets-button,
+            .tickets-button-container .leaderboard-button,
+            .tickets-button-container .runner-guide-button {
                 pointer-events: auto;
             }
         }
@@ -721,9 +775,11 @@
         <img src="Noc_sticker-03.png" alt="Nocturnal" class="nocturnal-logo">
     </div>
 
-    <!-- Get Tickets Button -->
+    <!-- Buttons Container -->
     <div class="tickets-button-container">
         <a href="https://simpli.events/e/NOC100" target="_blank" class="tickets-button">Get Tickets</a>
+        <a href="leaderboard.html" class="leaderboard-button">Leaderboard</a>
+        <a href="RUNNERS%20GUIDE%20(2026).pdf" target="_blank" class="runner-guide-button">Runner Guide</a>
     </div>
 
     <!-- Sponsors Section -->
