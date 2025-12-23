@@ -105,6 +105,29 @@
             font-size: 1.1em;
             font-weight: 500;
             color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.finisher {
+            background: #48bb78;
+            color: white;
+        }
+
+        .status-badge.dnf {
+            background: #f56565;
+            color: white;
         }
 
         .laps {
@@ -497,11 +520,17 @@
             teamsList.innerHTML = teamsArray.map((team, index) => {
                 const rank = index + 1;
                 const rankClass = rank === 1 ? 'first' : rank === 2 ? 'second' : rank === 3 ? 'third' : '';
+                const status = team.status || '';
+                const statusBadge = status === 'finisher' 
+                    ? '<span class="status-badge finisher">✓ Finisher</span>' 
+                    : status === 'dnf' 
+                    ? '<span class="status-badge dnf">DNF</span>' 
+                    : '';
 
                 return `
                     <div class="runner-row">
                         <div class="rank ${rankClass}">${rank}</div>
-                        <div class="name">${team.name}</div>
+                        <div class="name">${team.name}${statusBadge}</div>
                         <div class="laps">${team.laps} laps</div>
                         <div class="distance">${team.distance}km</div>
                     </div>
@@ -523,11 +552,17 @@
             soloList.innerHTML = soloArray.map((runner, index) => {
                 const rank = index + 1;
                 const rankClass = rank === 1 ? 'first' : rank === 2 ? 'second' : rank === 3 ? 'third' : '';
+                const status = runner.status || '';
+                const statusBadge = status === 'finisher' 
+                    ? '<span class="status-badge finisher">✓ Finisher</span>' 
+                    : status === 'dnf' 
+                    ? '<span class="status-badge dnf">DNF</span>' 
+                    : '';
 
                 return `
                     <div class="runner-row">
                         <div class="rank ${rankClass}">${rank}</div>
-                        <div class="name">${runner.name}</div>
+                        <div class="name">${runner.name}${statusBadge}</div>
                         <div class="laps">${runner.laps} laps</div>
                         <div class="distance">${runner.distance}km</div>
                     </div>

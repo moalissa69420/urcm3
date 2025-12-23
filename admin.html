@@ -243,6 +243,56 @@
             gap: 10px;
         }
 
+        .status-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-left: 10px;
+        }
+
+        .finisher-btn {
+            background: #48bb78;
+            color: white;
+        }
+
+        .finisher-btn:hover {
+            background: #38a169;
+        }
+
+        .finisher-btn.active {
+            background: #2f855a;
+            box-shadow: 0 0 0 2px #48bb78;
+        }
+
+        .dnf-btn {
+            background: #f56565;
+            color: white;
+        }
+
+        .dnf-btn:hover {
+            background: #e53e3e;
+        }
+
+        .dnf-btn.active {
+            background: #c53030;
+            box-shadow: 0 0 0 2px #f56565;
+        }
+
+        .clear-status-btn {
+            background: #a0aec0;
+            color: white;
+            font-size: 12px;
+            padding: 6px 12px;
+        }
+
+        .clear-status-btn:hover {
+            background: #718096;
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .runner-item {
@@ -449,6 +499,9 @@
 
             teamsList.innerHTML = teamsArray.map(team => {
                 const distance = team.laps * 5;
+                const status = team.status || '';
+                const isFinisher = status === 'finisher';
+                const isDNF = status === 'dnf';
                 return `
                     <div class="runner-item">
                         <div class="runner-info">
@@ -464,6 +517,9 @@
                                 + LAP COMPLETE
                             </button>
                             ${team.laps > 0 ? `<button class="undo-btn" onclick="removeLap('teams', '${team.id}')">Undo</button>` : ''}
+                            <button class="status-btn finisher-btn ${isFinisher ? 'active' : ''}" onclick="setStatus('teams', '${team.id}', 'finisher')" title="Mark as Finisher">✓ Finisher</button>
+                            <button class="status-btn dnf-btn ${isDNF ? 'active' : ''}" onclick="setStatus('teams', '${team.id}', 'dnf')" title="Mark as DNF">DNF</button>
+                            ${status ? `<button class="clear-status-btn" onclick="setStatus('teams', '${team.id}', '')" title="Clear status">Clear</button>` : ''}
                         </div>
                     </div>
                 `;
@@ -489,6 +545,9 @@
 
             soloList.innerHTML = soloArray.map(runner => {
                 const distance = runner.laps * 5;
+                const status = runner.status || '';
+                const isFinisher = status === 'finisher';
+                const isDNF = status === 'dnf';
                 return `
                     <div class="runner-item">
                         <div class="runner-info">
@@ -504,6 +563,9 @@
                                 + LAP COMPLETE
                             </button>
                             ${runner.laps > 0 ? `<button class="undo-btn" onclick="removeLap('solo', '${runner.id}')">Undo</button>` : ''}
+                            <button class="status-btn finisher-btn ${isFinisher ? 'active' : ''}" onclick="setStatus('solo', '${runner.id}', 'finisher')" title="Mark as Finisher">✓ Finisher</button>
+                            <button class="status-btn dnf-btn ${isDNF ? 'active' : ''}" onclick="setStatus('solo', '${runner.id}', 'dnf')" title="Mark as DNF">DNF</button>
+                            ${status ? `<button class="clear-status-btn" onclick="setStatus('solo', '${runner.id}', '')" title="Clear status">Clear</button>` : ''}
                         </div>
                     </div>
                 `;
@@ -547,6 +609,24 @@
                     console.log('Name updated successfully');
                 }).catch((error) => {
                     alert('Error updating name: ' + error.message);
+                });
+            }
+        }
+
+        // Set status (finisher or DNF)
+        function setStatus(category, runnerId, status) {
+            const ref = database.ref(`${category}/${runnerId}/status`);
+            if (status === '') {
+                ref.remove().then(() => {
+                    console.log('Status cleared');
+                }).catch((error) => {
+                    alert('Error clearing status: ' + error.message);
+                });
+            } else {
+                ref.set(status).then(() => {
+                    console.log(`Status set to ${status}`);
+                }).catch((error) => {
+                    alert('Error setting status: ' + error.message);
                 });
             }
         }
