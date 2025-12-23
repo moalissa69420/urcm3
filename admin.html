@@ -221,6 +221,28 @@
             background: #f56565;
         }
 
+        .edit-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .edit-btn:hover {
+            background: #38a169;
+        }
+
+        .name-edit-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .runner-item {
@@ -430,7 +452,10 @@
                 return `
                     <div class="runner-item">
                         <div class="runner-info">
-                            <div class="runner-name">${team.name}</div>
+                            <div class="name-edit-container">
+                                <div class="runner-name">${team.name}</div>
+                                <button class="edit-btn" onclick="editName('teams', '${team.id}', ${JSON.stringify(team.name)})" title="Edit name">✏️</button>
+                            </div>
                             <div class="runner-stats">${distance}km completed</div>
                         </div>
                         <div class="lap-count">${team.laps}</div>
@@ -457,7 +482,10 @@
                 return `
                     <div class="runner-item">
                         <div class="runner-info">
-                            <div class="runner-name">${runner.name}</div>
+                            <div class="name-edit-container">
+                                <div class="runner-name">${runner.name}</div>
+                                <button class="edit-btn" onclick="editName('solo', '${runner.id}', ${JSON.stringify(runner.name)})" title="Edit name">✏️</button>
+                            </div>
                             <div class="runner-stats">${distance}km completed</div>
                         </div>
                         <div class="lap-count">${runner.laps}</div>
@@ -486,6 +514,19 @@
             ref.transaction((currentLaps) => {
                 return Math.max(0, (currentLaps || 0) - 1);
             });
+        }
+
+        // Edit name
+        function editName(category, runnerId, currentName) {
+            const newName = prompt(`Edit ${category === 'teams' ? 'Team' : 'Runner'} name:`, currentName);
+            if (newName && newName.trim() !== '' && newName !== currentName) {
+                const ref = database.ref(`${category}/${runnerId}/name`);
+                ref.set(newName.trim()).then(() => {
+                    console.log('Name updated successfully');
+                }).catch((error) => {
+                    alert('Error updating name: ' + error.message);
+                });
+            }
         }
     </script>
 </body>
