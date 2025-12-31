@@ -443,13 +443,27 @@
             // Generate 40 teams
             const teams = {};
             for (let i = 1; i <= 40; i++) {
-                teams[`team${i}`] = { name: `Team ${i}`, laps: 0 };
+                teams[`team${i}`] = { 
+                    name: `Team ${i}`, 
+                    laps: 0,
+                    status: null,
+                    startTime: null,
+                    finishTime: null,
+                    stopTime: null
+                };
             }
 
             // Generate 25 solo runners
             const solo = {};
             for (let i = 1; i <= 25; i++) {
-                solo[`solo${i}`] = { name: `Runner ${i}`, laps: 0 };
+                solo[`solo${i}`] = { 
+                    name: `Runner ${i}`, 
+                    laps: 0,
+                    status: null,
+                    startTime: null,
+                    finishTime: null,
+                    stopTime: null
+                };
             }
 
             const initialData = {
@@ -459,8 +473,11 @@
 
             database.ref('/').set(initialData).then(() => {
                 alert('Race data initialized successfully! 40 teams and 25 solo runners created.');
+                // Force reload data to ensure it displays
+                loadData();
             }).catch((error) => {
                 alert('Error initializing data: ' + error.message);
+                console.error('Initialization error:', error);
             });
         }
 
