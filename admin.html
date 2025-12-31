@@ -504,35 +504,70 @@
             });
         }
 
+        let currentRaceStartTime = null;
+        let currentTeams = {};
+        let currentSolo = {};
+        let timerUpdateInterval = null;
+
         // Load and listen to data
         function loadData() {
             database.ref('/').on('value', (snapshot) => {
                 const data = snapshot.val();
                 console.log('Data received from Firebase:', data);
                 if (data) {
-                    const teams = data.teams || {};
-                    const solo = data.solo || {};
-                    const raceStartTime = data.raceStartTime || null;
+                    currentTeams = data.teams || {};
+                    currentSolo = data.solo || {};
+                    currentRaceStartTime = data.raceStartTime || null;
                     
-                    console.log('Teams count:', Object.keys(teams).length);
-                    console.log('Solo count:', Object.keys(solo).length);
-                    console.log('Race start time:', raceStartTime);
+                    console.log('Teams count:', Object.keys(currentTeams).length);
+                    console.log('Solo count:', Object.keys(currentSolo).length);
+                    console.log('Race start time:', currentRaceStartTime);
                     
                     // Update race start time display
-                    updateRaceStartTimeDisplay(raceStartTime);
+                    updateRaceStartTimeDisplay(currentRaceStartTime);
                     
-                    renderTeams(teams, raceStartTime);
-                    renderSolo(solo, raceStartTime);
+                    // Render initial data
+                    renderTeams(currentTeams, currentRaceStartTime);
+                    renderSolo(currentSolo, currentRaceStartTime);
+                    
+                    // Start real-time timer updates if race has started
+                    if (currentRaceStartTime) {
+                        startTimerUpdates();
+                    } else {
+                        stopTimerUpdates();
+                    }
+                    
                     document.getElementById('status').textContent = 'Connected - Live';
                 } else {
                     console.log('No data found in Firebase');
                     document.getElementById('teams-list').innerHTML = '<p>No teams found. Click "Initialize Race Data" to create teams.</p>';
                     document.getElementById('solo-list').innerHTML = '<p>No solo runners found. Click "Initialize Race Data" to create runners.</p>';
+                    stopTimerUpdates();
                 }
             }, (error) => {
                 console.error('Firebase error:', error);
                 document.getElementById('status').textContent = 'Error: ' + error.message;
             });
+        }
+
+        // Start real-time timer updates
+        function startTimerUpdates() {
+            if (timerUpdateInterval) return; // Already running
+            
+            timerUpdateInterval = setInterval(() => {
+                if (currentRaceStartTime) {
+                    renderTeams(currentTeams, currentRaceStartTime);
+                    renderSolo(currentSolo, currentRaceStartTime);
+                }
+            }, 1000); // Update every second
+        }
+
+        // Stop real-time timer updates
+        function stopTimerUpdates() {
+            if (timerUpdateInterval) {
+                clearInterval(timerUpdateInterval);
+                timerUpdateInterval = null;
+            }
         }
 
         // Start race - set race start time
@@ -541,6 +576,8 @@
             
             const raceStartTime = Date.now();
             database.ref('/raceStartTime').set(raceStartTime).then(() => {
+                currentRaceStartTime = raceStartTime;
+                startTimerUpdates(); // Start real-time updates
                 alert('Race started! All timers are now running.');
                 console.log('Race started at:', new Date(raceStartTime).toLocaleString());
             }).catch((error) => {
