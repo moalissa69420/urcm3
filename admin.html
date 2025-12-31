@@ -471,8 +471,29 @@
                 solo: solo
             };
 
-            database.ref('/').set(initialData).then(() => {
-                alert('Race data initialized successfully! 40 teams and 25 solo runners created.');
+            console.log('Initializing data with:', Object.keys(teams).length, 'teams and', Object.keys(solo).length, 'solo runners');
+            console.log('Team keys:', Object.keys(teams));
+            console.log('Solo keys:', Object.keys(solo));
+
+            // First remove all existing data, then set new data
+            database.ref('/').remove().then(() => {
+                console.log('Old data removed, setting new data...');
+                return database.ref('/').set(initialData);
+            }).then(() => {
+                console.log('Data set successfully. Verifying...');
+                // Verify the data was set correctly
+                return database.ref('/').once('value');
+            }).then((snapshot) => {
+                const data = snapshot.val();
+                const teamCount = data && data.teams ? Object.keys(data.teams).length : 0;
+                const soloCount = data && data.solo ? Object.keys(data.solo).length : 0;
+                console.log('Verification: Found', teamCount, 'teams and', soloCount, 'solo runners in Firebase');
+                
+                if (teamCount === 40 && soloCount === 25) {
+                    alert('Race data initialized successfully! 40 teams and 25 solo runners created.');
+                } else {
+                    alert(`Warning: Expected 40 teams and 25 solo runners, but found ${teamCount} teams and ${soloCount} solo runners. Please check the console.`);
+                }
                 // Force reload data to ensure it displays
                 loadData();
             }).catch((error) => {
