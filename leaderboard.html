@@ -580,10 +580,19 @@
         }
 
         // Format time duration
-        function formatTime(startTime, finishTime) {
+        function formatTime(startTime, finishTime, stopTime, status) {
             if (!startTime) return '-';
             
-            const endTime = finishTime || Date.now();
+            // If DNF, use stopTime to freeze the timer; otherwise use finishTime or current time
+            let endTime;
+            if (status === 'dnf' && stopTime) {
+                endTime = stopTime; // Timer stops when DNF is set
+            } else if (finishTime) {
+                endTime = finishTime; // Timer stops when finisher is set
+            } else {
+                endTime = Date.now(); // Timer continues running
+            }
+            
             const duration = endTime - startTime;
             
             const hours = Math.floor(duration / (1000 * 60 * 60));
@@ -617,7 +626,7 @@
                     : status === 'dnf' 
                     ? '<span class="status-badge dnf">DNF</span>' 
                     : '';
-                const timeDisplay = team.startTime ? formatTime(team.startTime, team.finishTime) : '-';
+                const timeDisplay = team.startTime ? formatTime(team.startTime, team.finishTime, team.stopTime, status) : '-';
 
                 return `
                     <div class="runner-row">
@@ -651,7 +660,7 @@
                     : status === 'dnf' 
                     ? '<span class="status-badge dnf">DNF</span>' 
                     : '';
-                const timeDisplay = runner.startTime ? formatTime(runner.startTime, runner.finishTime) : '-';
+                const timeDisplay = runner.startTime ? formatTime(runner.startTime, runner.finishTime, runner.stopTime, status) : '-';
 
                 return `
                     <div class="runner-row">

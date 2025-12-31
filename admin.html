@@ -440,39 +440,25 @@
         function initializeData() {
             if (!confirm('This will reset all lap counts to 0. Continue?')) return;
 
+            // Generate 40 teams
+            const teams = {};
+            for (let i = 1; i <= 40; i++) {
+                teams[`team${i}`] = { name: `Team ${i}`, laps: 0 };
+            }
+
+            // Generate 25 solo runners
+            const solo = {};
+            for (let i = 1; i <= 25; i++) {
+                solo[`solo${i}`] = { name: `Runner ${i}`, laps: 0 };
+            }
+
             const initialData = {
-                teams: {
-                    team1: { name: "Team Alpha", laps: 0 },
-                    team2: { name: "Team Bravo", laps: 0 },
-                    team3: { name: "Team Charlie", laps: 0 },
-                    team4: { name: "Team Delta", laps: 0 },
-                    team5: { name: "Team Echo", laps: 0 },
-                    team6: { name: "Team Foxtrot", laps: 0 },
-                    team7: { name: "Team Golf", laps: 0 },
-                    team8: { name: "Team Hotel", laps: 0 },
-                    team9: { name: "Team India", laps: 0 },
-                    team10: { name: "Team Juliet", laps: 0 },
-                    team11: { name: "Team Kilo", laps: 0 },
-                    team12: { name: "Team Lima", laps: 0 }
-                },
-                solo: {
-                    solo1: { name: "Runner One", laps: 0 },
-                    solo2: { name: "Runner Two", laps: 0 },
-                    solo3: { name: "Runner Three", laps: 0 },
-                    solo4: { name: "Runner Four", laps: 0 },
-                    solo5: { name: "Runner Five", laps: 0 },
-                    solo6: { name: "Runner Six", laps: 0 },
-                    solo7: { name: "Runner Seven", laps: 0 },
-                    solo8: { name: "Runner Eight", laps: 0 },
-                    solo9: { name: "Runner Nine", laps: 0 },
-                    solo10: { name: "Runner Ten", laps: 0 },
-                    solo11: { name: "Runner Eleven", laps: 0 },
-                    solo12: { name: "Runner Twelve", laps: 0 }
-                }
+                teams: teams,
+                solo: solo
             };
 
             database.ref('/').set(initialData).then(() => {
-                alert('Race data initialized successfully!');
+                alert('Race data initialized successfully! 40 teams and 25 solo runners created.');
             }).catch((error) => {
                 alert('Error initializing data: ' + error.message);
             });
@@ -630,22 +616,26 @@
         function setStatus(category, runnerId, status) {
             const statusRef = database.ref(`${category}/${runnerId}/status`);
             const finishTimeRef = database.ref(`${category}/${runnerId}/finishTime`);
+            const stopTimeRef = database.ref(`${category}/${runnerId}/stopTime`);
             
             if (status === '') {
-                // Clear status and finish time
+                // Clear status, finish time, and stop time
                 statusRef.remove().then(() => {
                     finishTimeRef.remove();
+                    stopTimeRef.remove();
                     console.log('Status cleared');
                 }).catch((error) => {
                     alert('Error clearing status: ' + error.message);
                 });
             } else {
                 statusRef.set(status).then(() => {
-                    // If marking as finisher, set finish time
+                    // If marking as finisher, set finish time and remove stop time
                     if (status === 'finisher') {
                         finishTimeRef.set(Date.now());
-                    } else {
-                        // If DNF, remove finish time if it exists
+                        stopTimeRef.remove();
+                    } else if (status === 'dnf') {
+                        // If DNF, set stop time to freeze the timer and remove finish time
+                        stopTimeRef.set(Date.now());
                         finishTimeRef.remove();
                     }
                     console.log(`Status set to ${status}`);
