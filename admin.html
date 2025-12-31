@@ -485,11 +485,23 @@
         function loadData() {
             database.ref('/').on('value', (snapshot) => {
                 const data = snapshot.val();
+                console.log('Data received from Firebase:', data);
                 if (data) {
-                    renderTeams(data.teams || {});
-                    renderSolo(data.solo || {});
+                    const teams = data.teams || {};
+                    const solo = data.solo || {};
+                    console.log('Teams count:', Object.keys(teams).length);
+                    console.log('Solo count:', Object.keys(solo).length);
+                    renderTeams(teams);
+                    renderSolo(solo);
                     document.getElementById('status').textContent = 'Connected - Live';
+                } else {
+                    console.log('No data found in Firebase');
+                    document.getElementById('teams-list').innerHTML = '<p>No teams found. Click "Initialize Race Data" to create teams.</p>';
+                    document.getElementById('solo-list').innerHTML = '<p>No solo runners found. Click "Initialize Race Data" to create runners.</p>';
                 }
+            }, (error) => {
+                console.error('Firebase error:', error);
+                document.getElementById('status').textContent = 'Error: ' + error.message;
             });
         }
 
