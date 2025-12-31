@@ -507,11 +507,22 @@
 
         function renderTeams(teams) {
             const teamsList = document.getElementById('teams-list');
+            if (!teamsList) {
+                console.error('teams-list element not found');
+                return;
+            }
+            
+            if (!teams || Object.keys(teams).length === 0) {
+                teamsList.innerHTML = '<p>No teams found. Click "Initialize Race Data" to create teams.</p>';
+                return;
+            }
+            
             const teamsArray = Object.entries(teams).map(([id, team]) => ({
                 id,
                 ...team
             }));
 
+            console.log('Rendering teams:', teamsArray.length);
             teamsList.innerHTML = teamsArray.map(team => {
                 const distance = team.laps * 5;
                 const status = team.status || '';
@@ -553,11 +564,22 @@
 
         function renderSolo(solo) {
             const soloList = document.getElementById('solo-list');
+            if (!soloList) {
+                console.error('solo-list element not found');
+                return;
+            }
+            
+            if (!solo || Object.keys(solo).length === 0) {
+                soloList.innerHTML = '<p>No solo runners found. Click "Initialize Race Data" to create runners.</p>';
+                return;
+            }
+            
             const soloArray = Object.entries(solo).map(([id, runner]) => ({
                 id,
                 ...runner
             }));
 
+            console.log('Rendering solo runners:', soloArray.length);
             soloList.innerHTML = soloArray.map(runner => {
                 const distance = runner.laps * 5;
                 const status = runner.status || '';
