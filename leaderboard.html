@@ -567,16 +567,17 @@
         database.ref('/').on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                renderLeaderboards(data);
+                const raceStartTime = data.raceStartTime || null;
+                renderLeaderboards(data, raceStartTime);
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('leaderboards').style.display = 'block';
                 updateLastUpdate();
             }
         });
 
-        function renderLeaderboards(data) {
-            renderTeams(data.teams || {});
-            renderSolo(data.solo || {});
+        function renderLeaderboards(data, raceStartTime) {
+            renderTeams(data.teams || {}, raceStartTime);
+            renderSolo(data.solo || {}, raceStartTime);
         }
 
         // Format time duration
@@ -606,7 +607,7 @@
             }
         }
 
-        function renderTeams(teams) {
+        function renderTeams(teams, raceStartTime) {
             const teamsList = document.getElementById('teams-list');
             const teamsArray = Object.entries(teams).map(([id, team]) => ({
                 id,
@@ -626,7 +627,9 @@
                     : status === 'dnf' 
                     ? '<span class="status-badge dnf">DNF</span>' 
                     : '';
-                const timeDisplay = team.startTime ? formatTime(team.startTime, team.finishTime, team.stopTime, status) : '-';
+                // Use race start time if available, otherwise use individual startTime
+                const startTime = raceStartTime || team.startTime;
+                const timeDisplay = startTime ? formatTime(startTime, team.finishTime, team.stopTime, status) : '-';
 
                 return `
                     <div class="runner-row">
@@ -640,7 +643,7 @@
             }).join('');
         }
 
-        function renderSolo(solo) {
+        function renderSolo(solo, raceStartTime) {
             const soloList = document.getElementById('solo-list');
             const soloArray = Object.entries(solo).map(([id, runner]) => ({
                 id,
@@ -660,7 +663,9 @@
                     : status === 'dnf' 
                     ? '<span class="status-badge dnf">DNF</span>' 
                     : '';
-                const timeDisplay = runner.startTime ? formatTime(runner.startTime, runner.finishTime, runner.stopTime, status) : '-';
+                // Use race start time if available, otherwise use individual startTime
+                const startTime = raceStartTime || runner.startTime;
+                const timeDisplay = startTime ? formatTime(startTime, runner.finishTime, runner.stopTime, status) : '-';
 
                 return `
                     <div class="runner-row">

@@ -363,7 +363,9 @@
                 <div class="status" id="status">Connected</div>
                 <div>
                     <button class="init-btn" onclick="initializeData()">Initialize Race Data</button>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
+                    <button class="init-btn" id="start-race-btn" onclick="startRace()" style="background: #f56565; margin-left: 10px;">Start Race</button>
+                    <div id="race-start-time" style="color: rgba(255,255,255,0.9); font-size: 0.9em; margin-left: 10px; display: inline-block;"></div>
+                    <button class="logout-btn" onclick="logout()" style="margin-left: 10px;">Logout</button>
                 </div>
             </div>
 
@@ -510,10 +512,17 @@
                 if (data) {
                     const teams = data.teams || {};
                     const solo = data.solo || {};
+                    const raceStartTime = data.raceStartTime || null;
+                    
                     console.log('Teams count:', Object.keys(teams).length);
                     console.log('Solo count:', Object.keys(solo).length);
-                    renderTeams(teams);
-                    renderSolo(solo);
+                    console.log('Race start time:', raceStartTime);
+                    
+                    // Update race start time display
+                    updateRaceStartTimeDisplay(raceStartTime);
+                    
+                    renderTeams(teams, raceStartTime);
+                    renderSolo(solo, raceStartTime);
                     document.getElementById('status').textContent = 'Connected - Live';
                 } else {
                     console.log('No data found in Firebase');
@@ -526,7 +535,48 @@
             });
         }
 
-        function renderTeams(teams) {
+        // Start race - set race start time
+        function startRace() {
+            if (!confirm('Start the race now? This will set the race start time and all timers will begin counting.')) return;
+            
+            const raceStartTime = Date.now();
+            database.ref('/raceStartTime').set(raceStartTime).then(() => {
+                alert('Race started! All timers are now running.');
+                console.log('Race started at:', new Date(raceStartTime).toLocaleString());
+            }).catch((error) => {
+                alert('Error starting race: ' + error.message);
+                console.error('Start race error:', error);
+            });
+        }
+
+        // Update race start time display
+        function updateRaceStartTimeDisplay(raceStartTime) {
+            const displayEl = document.getElementById('race-start-time');
+            const startBtn = document.getElementById('start-race-btn');
+            
+            if (raceStartTime) {
+                const startDate = new Date(raceStartTime);
+                const timeString = startDate.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                });
+                displayEl.textContent = `Race started: ${timeString}`;
+                startBtn.textContent = 'Race Started';
+                startBtn.disabled = true;
+                startBtn.style.background = '#48bb78';
+                startBtn.style.cursor = 'not-allowed';
+            } else {
+                displayEl.textContent = '';
+                startBtn.textContent = 'Start Race';
+                startBtn.disabled = false;
+                startBtn.style.background = '#f56565';
+                startBtn.style.cursor = 'pointer';
+            }
+        }
+
+        function renderTeams(teams, raceStartTime) {
             const teamsList = document.getElementById('teams-list');
             if (!teamsList) {
                 console.error('teams-list element not found');
@@ -552,6 +602,9 @@
 
             console.log('Rendering teams:', teamsArray.length);
             teamsList.innerHTML = teamsArray.map(team => {
+                // Use race start time if available, otherwise use individual startTime
+                const startTime = raceStartTime || team.startTime;
+                const timeDisplay = startTime ? formatTime(startTime, team.finishTime, team.stopTime, team.status || '') : '-';
                 const distance = team.laps * 5;
                 const status = team.status || '';
                 const isFinisher = status === 'finisher';
@@ -590,7 +643,7 @@
             });
         }
 
-        function renderSolo(solo) {
+        function renderSolo(solo, raceStartTime) {
             const soloList = document.getElementById('solo-list');
             if (!soloList) {
                 console.error('solo-list element not found');
@@ -616,6 +669,9 @@
 
             console.log('Rendering solo runners:', soloArray.length);
             soloList.innerHTML = soloArray.map(runner => {
+                // Use race start time if available, otherwise use individual startTime
+                const startTime = raceStartTime || runner.startTime;
+                const timeDisplay = startTime ? formatTime(startTime, runner.finishTime, runner.stopTime, runner.status || '') : '-';
                 const distance = runner.laps * 5;
                 const status = runner.status || '';
                 const isFinisher = status === 'finisher';
@@ -627,7 +683,7 @@
                                 <div class="runner-name">${runner.name}</div>
                                 <button class="edit-btn" data-category="solo" data-id="${runner.id}" data-name="${runner.name.replace(/"/g, '&quot;')}" title="Edit name">✏️</button>
                             </div>
-                            <div class="runner-stats">${distance}km completed</div>
+                            <div class="runner-stats">${distance}km completed ${timeDisplay !== '-' ? '• ' + timeDisplay : ''}</div>
                         </div>
                         <div class="lap-count">${runner.laps}</div>
                         <div class="lap-controls">
@@ -654,23 +710,40 @@
             });
         }
 
+        // Format time duration
+        function formatTime(startTime, finishTime, stopTime, status) {
+            if (!startTime) return '-';
+            
+            // If DNF, use stopTime to freeze the timer; otherwise use finishTime or current time
+            let endTime;
+            if (status === 'dnf' && stopTime) {
+                endTime = stopTime; // Timer stops when DNF is set
+            } else if (finishTime) {
+                endTime = finishTime; // Timer stops when finisher is set
+            } else {
+                endTime = Date.now(); // Timer continues running
+            }
+            
+            const duration = endTime - startTime;
+            
+            const hours = Math.floor(duration / (1000 * 60 * 60));
+            const minutes = Math.floor((duration % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((duration % (1000 * 60)) / 1000);
+            
+            if (hours > 0) {
+                return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
         // Add a lap
         function addLap(category, runnerId) {
             const lapsRef = database.ref(`${category}/${runnerId}/laps`);
-            const startTimeRef = database.ref(`${category}/${runnerId}/startTime`);
             
             lapsRef.transaction((currentLaps) => {
                 const newLaps = (currentLaps || 0) + 1;
-                
-                // If this is the first lap, set start time
-                if (newLaps === 1) {
-                    startTimeRef.once('value', (snapshot) => {
-                        if (!snapshot.exists()) {
-                            startTimeRef.set(Date.now());
-                        }
-                    });
-                }
-                
+                // Note: We no longer set individual startTime here - timer uses raceStartTime
                 return newLaps;
             });
         }
