@@ -563,21 +563,56 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        let currentRaceStartTime = null;
+        let currentTeams = {};
+        let currentSolo = {};
+        let timerUpdateInterval = null;
+
         // Listen for data changes
         database.ref('/').on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                const raceStartTime = data.raceStartTime || null;
-                renderLeaderboards(data, raceStartTime);
+                currentRaceStartTime = data.raceStartTime || null;
+                currentTeams = data.teams || {};
+                currentSolo = data.solo || {};
+                
+                renderLeaderboards(data, currentRaceStartTime);
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('leaderboards').style.display = 'block';
                 updateLastUpdate();
+                
+                // Start real-time timer updates if race has started
+                if (currentRaceStartTime) {
+                    startTimerUpdates();
+                } else {
+                    stopTimerUpdates();
+                }
             }
         });
 
         function renderLeaderboards(data, raceStartTime) {
             renderTeams(data.teams || {}, raceStartTime);
             renderSolo(data.solo || {}, raceStartTime);
+        }
+
+        // Start real-time timer updates
+        function startTimerUpdates() {
+            if (timerUpdateInterval) return; // Already running
+            
+            timerUpdateInterval = setInterval(() => {
+                if (currentRaceStartTime) {
+                    renderTeams(currentTeams, currentRaceStartTime);
+                    renderSolo(currentSolo, currentRaceStartTime);
+                }
+            }, 1000); // Update every second
+        }
+
+        // Stop real-time timer updates
+        function stopTimerUpdates() {
+            if (timerUpdateInterval) {
+                clearInterval(timerUpdateInterval);
+                timerUpdateInterval = null;
+            }
         }
 
         // Format time duration
