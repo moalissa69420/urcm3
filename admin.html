@@ -616,7 +616,7 @@
                                 <div class="runner-name">${team.name}</div>
                                 <button class="edit-btn" data-category="teams" data-id="${team.id}" data-name="${team.name.replace(/"/g, '&quot;')}" title="Edit name">✏️</button>
                             </div>
-                            <div class="runner-stats">${distance}km completed</div>
+                            <div class="runner-stats">${distance}km completed ${timeDisplay !== '-' ? '• ' + timeDisplay : ''}</div>
                         </div>
                         <div class="lap-count">${team.laps}</div>
                         <div class="lap-controls">
