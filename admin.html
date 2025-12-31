@@ -543,6 +543,13 @@
                 ...team
             }));
 
+            // Sort teams by numeric order (team1, team2, ..., team40)
+            teamsArray.sort((a, b) => {
+                const numA = parseInt(a.id.replace('team', ''));
+                const numB = parseInt(b.id.replace('team', ''));
+                return numA - numB;
+            });
+
             console.log('Rendering teams:', teamsArray.length);
             teamsList.innerHTML = teamsArray.map(team => {
                 const distance = team.laps * 5;
@@ -599,6 +606,13 @@
                 id,
                 ...runner
             }));
+
+            // Sort solo runners by numeric order (solo1, solo2, ..., solo25)
+            soloArray.sort((a, b) => {
+                const numA = parseInt(a.id.replace('solo', ''));
+                const numB = parseInt(b.id.replace('solo', ''));
+                return numA - numB;
+            });
 
             console.log('Rendering solo runners:', soloArray.length);
             soloList.innerHTML = soloArray.map(runner => {
